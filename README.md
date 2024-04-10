@@ -31,10 +31,9 @@ The project owner uses Laravel 11 and harnessed the power of initial to design a
 - 8. Start vite server - `npm run dev`
 - 9. Start Artisan server - `php artisan serve`
 - 10. Authentication Credentials 
-   email : test@user.com 
-   password: Test123*
+          email : test@user.com 
+          password: Test123*
 
-![Uploading Task.jpeg…]()
 
 ## Demo
 Coming soon...
