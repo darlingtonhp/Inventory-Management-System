@@ -34,7 +34,7 @@ The project owner uses Laravel 11 and harnessed the power of initial to design a
    email : test@user.com 
    password: Test123*
 
-      
+![Uploading Task.jpeg…]()
 
 ## Demo
 Coming soon...
