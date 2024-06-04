@@ -5,9 +5,7 @@
 
 ## About the project
 
-
-The task was to create an Inventory Management Application/System using Laravel and React.
-The project owner uses Laravel 11 and harnessed the power of initial to design a full stack application using Laravel as the backend and reactjs as frontend of choice. This project did not encorporate any other databases except SQLite as required by the employer but will take this as a starting point to learn Laravel and React.
+This project demonstrates a full-stack inventory management application built with Laravel 11 on the backend and ReactJS on the frontend. Inertia.js is used to streamline communication between the two frameworks. While the initial implementation utilizes SQLite as the database to meet the project owner's requirements, this project serves as a valuable starting point for learning both Laravel and React
 
 ## Features
 1. Registration & Login using Laravel Breezer and Inertia
