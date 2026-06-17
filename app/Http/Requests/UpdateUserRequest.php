@@ -28,6 +28,8 @@ class UpdateUserRequest extends FormRequest
             "name" => ["required", "string", "max:255"],
             "email" => ["required", "email", Rule::unique("users")->ignore($user->id)],
             "password" => ["nullable", "confirmed", Password::min(8)->letters()->symbols()->numbers()],
+            "role_id" => ["required", "exists:roles,id"],
+            "is_active" => ["required", "boolean"],
         ];
     }
 }

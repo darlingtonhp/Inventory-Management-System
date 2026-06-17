@@ -20,7 +20,10 @@ class UserCRUDResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'created_at' => (new Carbon($this->created_at))->format('Y-m-d H:i:s'),
+            'role_id' => $this->role_id,
+            'role_name' => $this->role?->name,
+            'is_active' => (bool)$this->is_active,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

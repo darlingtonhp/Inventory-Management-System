@@ -29,11 +29,36 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        
+        $lowStockCount = 0;
+        $lowStockItems = [];
+
+        if ($user) {
+            $lowStockQuery = \App\Models\Product::whereHas('inventory', function ($q) {
+                $q->whereRaw('inventory.quantity_on_hand <= products.reorder_level');
+            });
+            
+            $lowStockCount = $lowStockQuery->count();
+            $lowStockItems = $lowStockQuery->with('inventory')->take(5)->get()->map(function ($p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'sku' => $p->sku,
+                    'on_hand' => $p->inventory ? $p->inventory->quantity_on_hand : 0,
+                    'reorder_level' => $p->reorder_level,
+                    'unit' => $p->unit,
+                ];
+            })->toArray();
+        }
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
+            'lowStockCount' => $lowStockCount,
+            'lowStockItems' => $lowStockItems,
         ];
     }
 }

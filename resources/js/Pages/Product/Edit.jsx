@@ -1,143 +1,231 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
-import { useForm } from "@inertiajs/react";
-import InputError from "@/Components/InputError"; // Import the useForm hook
+import React from 'react';
+import ModuleLayout from '@/Layouts/ModuleLayout';
+import InputError from '@/Components/InputError';
+import { Head, useForm, Link } from '@inertiajs/react';
 
-export default function Edit({ auth, product }) {
-  // Initialize the form data using the useForm hook
-  const { data, setData, post, errors } = useForm({
-    image: "",
-    name: product.name || "",
-    description: product.description || "",
-    price: product.price || "",
-    quantity: product.quantity || "",
-    _method: "PUT", // Ensure the correct HTTP method is used for updating
-  });
+export default function Edit({ auth, product, categories }) {
+    const { data, setData, post, errors, processing } = useForm({
+        name: product.name || '',
+        category_id: product.category_id || '',
+        sku: product.sku || '',
+        unit: product.unit || 'pcs',
+        cost_price: product.cost_price || '0.00',
+        selling_price: product.selling_price || '0.00',
+        reorder_level: product.reorder_level || '10',
+        max_level: product.max_level || '',
+        status: product.status || 'Active',
+        image: null,
+        _method: 'PUT' // For Laravel file upload support on update requests
+    });
 
-  // Define the onSubmit function
-  const onSubmit = (e) => {
-    e.preventDefault();
-    post(route("product.update", product.id)); // Post the form data to the update route
-  };
+    const onSubmit = (e) => {
+        e.preventDefault();
+        // Post request with spoofed PUT method is required in Laravel to upload files on updates
+        post(route('product.update', product.id));
+    };
 
-  return (
-    <AuthenticatedLayout
-      user={auth.user}
-      header={
-        <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Edit Product "{product.name}"
-          </h2>
-        </div>
-      }
-    >
-      <Head title="Edit Product" />
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <form
-              onSubmit={onSubmit}
-              className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
-            >
-              {/* Input field for product image */}
-              <div>
-                <label className="font-bold text-lg" htmlFor="product_image">
-                  Product Image
-                </label>
-                <input
-                  id="product_image"
-                  type="file"
-                  name="image"
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("image", e.target.files[0])}
-                />
-                <InputError message={errors.image} className="mt-2" />
-              </div>
+    const crumbs = [
+        { title: 'Catalog', route: '/product' },
+        { title: 'Products', route: '/product' },
+        { title: `Edit ${product.name}` }
+    ];
 
-              {/* Input field for product name */}
-              <div className="mt-4">
-                <label className="font-bold text-lg" htmlFor="product_name">
-                  Product Name
-                </label>
-                <input
-                  id="product_name"
-                  type="text"
-                  name="name"
-                  value={data.name}
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("name", e.target.value)}
-                />
-                <InputError message={errors.name} className="mt-2" />
-              </div>
+    return (
+        <ModuleLayout currentModule="catalog" breadcrumbs={crumbs}>
+            <Head title={`Edit Product: ${product.name}`} />
 
-              {/* Input field for product description */}
-              <div className="mt-4">
-                <label
-                  className="font-bold text-lg"
-                  htmlFor="product_description"
-                >
-                  Product Description
-                </label>
-                <textarea
-                  id="product_description"
-                  name="description"
-                  value={data.description}
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("description", e.target.value)}
-                />
-                <InputError message={errors.description} className="mt-2" />
-              </div>
-
-              {/* Input field for product price */}
-              <div className="mt-4">
-                <label className="font-bold text-lg" htmlFor="product_price">
-                  Product Price
-                </label>
-                <input
-                  id="product_price"
-                  type="number"
-                  name="price"
-                  value={data.price}
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("price", e.target.value)}
-                />
-                <InputError message={errors.price} className="mt-2" />
-              </div>
-
-              {/* Input field for product quantity */}
-              <div className="mt-4">
-                <label className="font-bold text-lg" htmlFor="product_quantity">
-                  Product Quantity
-                </label>
-                <input
-                  id="product_quantity"
-                  type="number"
-                  name="quantity"
-                  value={data.quantity}
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("quantity", e.target.value)}
-                />
-                <InputError message={errors.quantity} className="mt-2" />
-              </div>
-
-              <div className="mt-4 text-right">
+            {/* Header Block */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6 shadow-sm flex items-center justify-between">
+                <div>
+                    <h1 className="text-xl font-bold text-gray-900">Edit Product: {product.name}</h1>
+                    <p className="text-xs text-gray-500 mt-1">Update specifications, stock configurations, or parameters</p>
+                </div>
                 <Link
-                  href={route("product.index")}
-                  className="bg-gray-100 px-3 py-1 text-gray-800 rounded shadow transition-all hover:bg-gray-200 mr-2 text-sm h-8"
+                    href={route('product.index')}
+                    className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 hover:bg-gray-50 text-xs font-semibold text-gray-600 rounded-lg transition-colors"
                 >
-                  Cancel
+                    <i className="ri-arrow-left-line" />
+                    Back
                 </Link>
-                <button
-                  className="bg-emerald-500 px-3 py-1 text-white shadow transition-all hover:bg-emerald-600 text-sm h-8"
-                  type="submit"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </AuthenticatedLayout>
-  );
+            </div>
+
+            {/* Form Container */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-4xl">
+                <form onSubmit={onSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        {/* 1. Details Section */}
+                        <div className="space-y-4 md:col-span-2">
+                            <h3 className="text-sm font-bold text-gray-800 border-b border-gray-100 pb-2">
+                                Product details
+                            </h3>
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Product Name *</label>
+                            <input
+                                type="text"
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                                required
+                            />
+                            <InputError message={errors.name} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Category *</label>
+                            <select
+                                value={data.category_id}
+                                onChange={(e) => setData('category_id', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none bg-white"
+                                required
+                            >
+                                <option value="">Select Category</option>
+                                {categories.map((cat) => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                            <InputError message={errors.category_id} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">SKU / Barcode *</label>
+                            <input
+                                type="text"
+                                value={data.sku}
+                                onChange={(e) => setData('sku', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                                required
+                            />
+                            <InputError message={errors.sku} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Unit of Measure *</label>
+                            <input
+                                type="text"
+                                value={data.unit}
+                                onChange={(e) => setData('unit', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                                required
+                            />
+                            <InputError message={errors.unit} className="mt-1" />
+                        </div>
+
+                        {/* 2. Pricing Section */}
+                        <div className="space-y-4 md:col-span-2 pt-2">
+                            <h3 className="text-sm font-bold text-gray-800 border-b border-gray-100 pb-2">
+                                Pricing & Valuations
+                            </h3>
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Cost Price ($) *</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                value={data.cost_price}
+                                onChange={(e) => setData('cost_price', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                                required
+                            />
+                            <InputError message={errors.cost_price} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Selling Price ($) *</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                value={data.selling_price}
+                                onChange={(e) => setData('selling_price', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                                required
+                            />
+                            <InputError message={errors.selling_price} className="mt-1" />
+                        </div>
+
+                        {/* 3. Inventory Thresholds Section */}
+                        <div className="space-y-4 md:col-span-2 pt-2">
+                            <h3 className="text-sm font-bold text-gray-800 border-b border-gray-100 pb-2">
+                                Stock Settings
+                            </h3>
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Reorder Level (Alert Threshold) *</label>
+                            <input
+                                type="number"
+                                value={data.reorder_level}
+                                onChange={(e) => setData('reorder_level', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                                required
+                            />
+                            <InputError message={errors.reorder_level} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Maximum Stock Level</label>
+                            <input
+                                type="number"
+                                value={data.max_level}
+                                onChange={(e) => setData('max_level', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                            />
+                            <InputError message={errors.max_level} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Catalog Status *</label>
+                            <select
+                                value={data.status}
+                                onChange={(e) => setData('status', e.target.value)}
+                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none bg-white"
+                                required
+                            >
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                            <InputError message={errors.status} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-gray-700 block mb-1">Replace Product Image (optional)</label>
+                            <input
+                                type="file"
+                                onChange={(e) => setData('image', e.target.files[0])}
+                                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                            />
+                            <InputError message={errors.image} className="mt-1" />
+                            {product.image_path && (
+                                <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                                    <span>Current:</span>
+                                    <a href={product.image_path} target="_blank" rel="noreferrer" className="text-indigo-600 underline font-semibold">View image</a>
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+
+                    {/* Actions Row */}
+                    <div className="flex justify-end gap-2 border-t border-gray-100 pt-4">
+                        <Link
+                            href={route('product.index')}
+                            className="px-4 py-2 border border-gray-200 hover:bg-gray-50 text-xs font-semibold text-gray-600 rounded-lg transition-colors"
+                        >
+                            Cancel
+                        </Link>
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors disabled:opacity-50"
+                        >
+                            Update Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </ModuleLayout>
+    );
 }

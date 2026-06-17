@@ -11,16 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reports', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->foreignId('created_by')
-                ->constrained('users');
-            $table->foreignId('updated_by')
-                ->constrained('users');
-            $table->timestamps();
-        });
+        // Reports are generated dynamically; database table not required.
     }
 
     /**
@@ -28,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reports');
+        //
     }
 };
