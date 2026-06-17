@@ -37,7 +37,7 @@ export default function ForgotPassword({ status }) {
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-400 focus:ring-indigo-400 focus:bg-white/10"
+                        className="mt-1 block w-full !bg-slate-900/60 !border-white/15 !text-white placeholder-white/30 focus:!border-indigo-400 focus:ring-indigo-400 focus:!bg-slate-900/80"
                         isFocused={true}
                         placeholder="john.doe@smartinv.com"
                         onChange={(e) => setData('email', e.target.value)}
@@ -48,7 +48,7 @@ export default function ForgotPassword({ status }) {
 
                 <div className="pt-2">
                     <PrimaryButton 
-                        className="w-full justify-center bg-indigo-600 hover:bg-indigo-500 text-white active:bg-indigo-700 focus:ring-indigo-400 border-none py-2.5 rounded-lg shadow-lg font-bold text-xs transition-all" 
+                        className="w-full justify-center !bg-indigo-600 hover:!bg-indigo-500 !text-white active:!bg-indigo-700 focus:ring-indigo-400 border-none py-2.5 rounded-lg shadow-lg font-bold text-xs transition-all" 
                         disabled={processing}
                     >
                         {processing ? 'Sending Link...' : 'Email Password Reset Link'}

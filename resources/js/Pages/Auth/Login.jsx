@@ -47,7 +47,7 @@ export default function Login({ status, canResetPassword }) {
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-400 focus:ring-indigo-400 focus:bg-white/10"
+                        className="mt-1 block w-full !bg-slate-900/60 !border-white/15 !text-white placeholder-white/30 focus:!border-indigo-400 focus:ring-indigo-400 focus:!bg-slate-900/80"
                         autoComplete="username"
                         isFocused={true}
                         placeholder="admin@smartinv.com"
@@ -66,7 +66,7 @@ export default function Login({ status, canResetPassword }) {
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             value={data.password}
-                            className="block w-full bg-white/5 border-white/10 text-white placeholder-white/30 focus:border-indigo-400 focus:ring-indigo-400 focus:bg-white/10 pr-10"
+                            className="block w-full !bg-slate-900/60 !border-white/15 !text-white placeholder-white/30 focus:!border-indigo-400 focus:ring-indigo-400 focus:!bg-slate-900/80 pr-10"
                             autoComplete="current-password"
                             placeholder="••••••••"
                             onChange={(e) => setData('password', e.target.value)}
@@ -106,7 +106,7 @@ export default function Login({ status, canResetPassword }) {
 
                 <div className="pt-2">
                     <PrimaryButton 
-                        className="w-full justify-center bg-indigo-600 hover:bg-indigo-500 text-white active:bg-indigo-700 focus:ring-indigo-400 border-none py-2.5 rounded-lg shadow-lg font-bold text-sm transition-all" 
+                        className="w-full justify-center !bg-indigo-600 hover:!bg-indigo-500 !text-white active:!bg-indigo-700 focus:ring-indigo-400 border-none py-2.5 rounded-lg shadow-lg font-bold text-sm transition-all" 
                         disabled={processing}
                     >
                         {processing ? 'Signing in...' : 'Sign In'}
