@@ -15,7 +15,7 @@ This project demonstrates a full-stack inventory management application built wi
 5. Show all Products or show tarnsactions for a specific product
 6. Show dashboard with overview information
 7. Delete and Add new users
-8. SQL Lite Database
+8. MYSQL Database
 
 
 ## Instructions / How to run this project
