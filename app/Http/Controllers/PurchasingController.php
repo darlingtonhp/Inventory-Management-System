@@ -17,8 +17,13 @@ class PurchasingController extends Controller
         $fullyReceivedPOs = PurchaseOrder::where('status', 'Fully Received')->count();
 
         // Spend chart data: group by month for the last 6 months
+        $isMysql = DB::connection()->getDriverName() === 'mysql';
+        $monthFormat = $isMysql
+            ? "DATE_FORMAT(purchase_order_items.created_at, '%Y-%m')"
+            : "strftime('%Y-%m', purchase_order_items.created_at)";
+
         $chartData = PurchaseOrderItem::select(
-                DB::raw("strftime('%Y-%m', purchase_order_items.created_at) as month_key"),
+                DB::raw("$monthFormat as month_key"),
                 DB::raw("sum(ordered_qty * unit_cost) as spend")
             )
             ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
@@ -34,27 +39,6 @@ class PurchasingController extends Controller
                     'spend' => (float)$item->spend,
                 ];
             });
-
-        // If using MySQL instead of SQLite, strftime won't work. Let's provide a fallback:
-        if (config('database.default') === 'mysql') {
-            $chartData = PurchaseOrderItem::select(
-                    DB::raw("DATE_FORMAT(purchase_order_items.created_at, '%Y-%m') as month_key"),
-                    DB::raw("sum(ordered_qty * unit_cost) as spend")
-                )
-                ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
-                ->whereIn('purchase_orders.status', ['Submitted', 'Partially Received', 'Fully Received'])
-                ->where('purchase_order_items.created_at', '>=', now()->subMonths(6))
-                ->groupBy('month_key')
-                ->orderBy('month_key')
-                ->get()
-                ->map(function ($item) {
-                    $dateObj = \DateTime::createFromFormat('Y-m', $item->month_key);
-                    return [
-                        'month' => $dateObj ? $dateObj->format('M Y') : $item->month_key,
-                        'spend' => (float)$item->spend,
-                    ];
-                });
-        }
 
         // Recent orders
         $recentOrders = PurchaseOrder::with('supplier', 'items')

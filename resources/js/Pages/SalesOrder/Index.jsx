@@ -127,9 +127,9 @@ export default function Index({ auth, orders, success }) {
                                             <td className="px-6 py-4 text-center relative">
                                                 <button
                                                     onClick={() => setActiveMenuId(activeMenuId === order.id ? null : order.id)}
-                                                    className="w-8 h-8 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold inline-flex items-center justify-center shadow-sm transition-colors focus:outline-none"
+                                                    className="w-8 h-8 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white inline-flex items-center justify-center shadow-sm transition-colors focus:outline-none"
                                                 >
-                                                    ...
+                                                    <i className="ri-more-fill text-lg" />
                                                 </button>
 
                                                 {activeMenuId === order.id && (

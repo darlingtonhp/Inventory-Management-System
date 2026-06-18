@@ -8,14 +8,25 @@ Built with **Laravel 11**, **React JS**, and **Inertia.js**, SIMS delivers a smo
 
 ## 🎨 Visual Upgrades & Landing Pages
 * **Harare Cockpit Welcome Page:** A high-end cockpit console landing screen featuring ambient glow backlights, Zimbabwe node status details, live ping latency indicators, and glassmorphic card grids.
+
+  ![Harare Cockpit Welcome Page](public/images/welcome_page.png)
+
 * **Glassmorphic Auth Pipeline:** Stunning, translucent login, registration, recovery, and password reset frames overlaid on a blur-filtered hero backplate. Includes a toggleable password visibility button (`ri-eye-line` / `ri-eye-off-line`) using Remix Icons.
+
+  ![Glassmorphic Auth Pipeline](public/images/login_page.png)
+
 * **Timeframe Statistics Dashboard:** General KPIs (Valuations, alert count, dispatches, and revenues) and module metrics adapt in real time to timeframe filters (*Today*, *This Week*, *This Month*).
+
+  ![Timeframe Statistics Dashboard](public/images/dashboard.png)
+
 * **Live Notifications Alert Bell:** A stateful top navigation notification bell that fetches and displays real-time low-stock product details, links to product sheets, and animates when levels drop below critical thresholds.
 
 ---
 
 ## 🧠 Core System Modules (8 Active Modules)
 1. **Catalog Overview:** Hierarchical category trees mapping, unit measures, active products tracking, soft deletions, and barcode SKU generation.
+
+   ![Catalog Overview](public/images/catalog.png)
 2. **Supplier Management:** Comprehensive partner directories, contact management, trade terms, and partner logs.
 3. **Purchasing Module:** Purchase order pipelines (Draft, Submitted, Received), order cost calculations, and automatic intake ingestion.
 4. **Sales & Dispatch:** Customer order tracking, stock reservation, invoice lines, and dispatching.

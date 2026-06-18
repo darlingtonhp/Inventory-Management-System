@@ -22,8 +22,13 @@ class SalesController extends Controller
             ->sum(DB::raw('sales_order_items.quantity * (sales_order_items.unit_price - sales_order_items.discount)'));
 
         // Chart data: daily sales for the last 30 days
+        $isMysql = DB::connection()->getDriverName() === 'mysql';
+        $dateFormat = $isMysql
+            ? "DATE_FORMAT(sales_orders.order_date, '%m-%d')"
+            : "strftime('%m-%d', sales_orders.order_date)";
+
         $chartData = SalesOrder::select(
-                DB::raw("strftime('%m-%d', sales_orders.order_date) as date_key"),
+                DB::raw("$dateFormat as date_key"),
                 DB::raw("sum(sales_order_items.quantity * (sales_order_items.unit_price - sales_order_items.discount)) as sales")
             )
             ->join('sales_order_items', 'sales_orders.id', '=', 'sales_order_items.sales_order_id')
@@ -38,26 +43,6 @@ class SalesController extends Controller
                     'sales' => (float)$item->sales,
                 ];
             });
-
-        // Fallback for MySQL:
-        if (config('database.default') === 'mysql') {
-            $chartData = SalesOrder::select(
-                    DB::raw("DATE_FORMAT(sales_orders.order_date, '%m-%d') as date_key"),
-                    DB::raw("sum(sales_order_items.quantity * (sales_order_items.unit_price - sales_order_items.discount)) as sales")
-                )
-                ->join('sales_order_items', 'sales_orders.id', '=', 'sales_order_items.sales_order_id')
-                ->whereIn('sales_orders.status', ['Confirmed', 'Dispatched', 'Completed'])
-                ->where('sales_orders.order_date', '>=', now()->subDays(30))
-                ->groupBy('date_key')
-                ->orderBy('date_key')
-                ->get()
-                ->map(function ($item) {
-                    return [
-                        'date' => $item->date_key,
-                        'sales' => (float)$item->sales,
-                    ];
-                });
-        }
 
         // Recent dispatches
         $recentDispatches = SalesOrder::with('items')
